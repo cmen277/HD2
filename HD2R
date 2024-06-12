@@ -1,4 +1,1 @@
-aobscan(INJECT,89 54 24 10 89 4C 24 08 48 81 EC 18 01 00 00) 
-registersymbol(INJECT)
-INJECT:
-  db EB FE
+
