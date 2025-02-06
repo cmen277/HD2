@@ -448,7 +448,8 @@ void DrawMenu()
         }
         if (bPayload)
         {
-            ImGui::SliderInt("<- ID", &PayloadID, 0, 101);
+            //ImGui::SliderInt("<- ID", &PayloadID, 0, 101);
+            ImGui::InputInt("<- ID", &PayloadID);
             PayloadHash = StratagemPayloadItemTypeList[PayloadID];
         }
         break;
@@ -1080,7 +1081,22 @@ __attribute__((naked)) void GetProjIDASM()
 {
     __asm
     {
+        cmp byte ptr[bPlayerOnly], 1
+        je PlayerCheck
         mov iProjID, eax
+        jmp SkipCheck
+
+        PlayerCheck:
+        push rbx
+        mov rbx,[rsp+490h] // Function that calls this function
+        movzx ebx,byte ptr[rbx]
+        cmp ebx,45h
+        jne NotPlayer
+            mov iProjID, eax
+        NotPlayer:
+        pop rbx
+
+        SkipCheck:
         mov edi, eax
         mov ecx, eax
         call IDSwap
@@ -1089,8 +1105,8 @@ __attribute__((naked)) void GetProjIDASM()
         mov edi, eax
         Original :
         mov eax, edi
-            mov rdi, GetProjIDReturn
-            jmp rdi
+        mov rdi, GetProjIDReturn
+        jmp rdi
     }
 }
 
